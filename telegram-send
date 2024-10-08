@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import yaml
+import telegram
+import asyncio
+import sys
+from telegram import Bot
+
+TELEGRAM_CONFIG_FILE = '/root/.config/telegram-send.yaml'
+
+with open(TELEGRAM_CONFIG_FILE, 'r') as config_file:
+    config = yaml.safe_load(config_file)
+
+TOKEN = config['telegram']['token']
+CHAT_ID = config['telegram']['chat_id']
+#FILE_PATH = '/opt/sltrib/comic.jpg'
+FILE_PATH = sys.argv[1]
+CAPTION = sys.argv[2]
+
+async def send_file():
+    bot = Bot(token=TOKEN)
+    # Sending the document with async-await and caption
+    with open(FILE_PATH, 'rb') as file:
+        await bot.send_document(chat_id=CHAT_ID, document=FILE_PATH, caption=CAPTION)
+
+if __name__ == '__main__':
+    # Run the async function
+    asyncio.run(send_file())
